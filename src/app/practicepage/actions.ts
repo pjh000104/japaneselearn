@@ -18,7 +18,7 @@ export async function searchWord(prevState: FormState, formData: FormData): Prom
   if (!word) {
     return { error: "Please enter a word!" };
   }
-
+  
   const info = await db.select().from(words).where(eq(words.meaning, word));
 
   if (info.length === 0) {
