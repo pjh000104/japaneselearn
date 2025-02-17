@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 interface SidebarProps {
@@ -5,10 +6,21 @@ interface SidebarProps {
   onDelete: (id: number) => void;
 }
 
+
 const Sidebar: React.FC<SidebarProps> = ({ list, onDelete }) => {
+
+    const handleNavigate = (list: object[]) => {
+        if (typeof window !== "undefined") {
+            localStorage.setItem("wordList", JSON.stringify(list)); // Save list in localStorage
+        }
+    };
+
     return (
         <aside className="w-64 bg-gray-800 text-white h-dvh p-4 overflow-auto">
-        <p>Word List</p>
+            <p>Word List</p>
+            <button onClick={() => handleNavigate(list)}>
+                <Link href="/memorize">Go to Memorize</Link>
+            </button>
             <ul className="space-y-2">
                 {list.map((item) => (
                 <li

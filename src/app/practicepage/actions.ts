@@ -1,8 +1,8 @@
 "use server";
 
 import { eq } from "drizzle-orm";
-import { db } from "@/lib/db";
-import { words } from "@/lib/schema";
+import { db } from "@/lib/db/db";
+import { words } from "@/lib/db/schema";
 
 // Define a strict type for the state
 interface FormState {
