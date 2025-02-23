@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React from "react";
-
+import CreateWordSetButton from "./createWordSetButton"
 interface SidebarProps {
   list: { id: number; english: string; romaji: string; icon?: React.ReactNode }[];
   onDelete: (id: number) => void;
@@ -21,6 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ list, onDelete }) => {
             <button onClick={() => handleNavigate(list)}>
                 <Link href="/memorize">Go to Memorize</Link>
             </button>
+            <CreateWordSetButton wordlist = {list}></CreateWordSetButton>
             <ul className="space-y-2">
                 {list.map((item) => (
                 <li

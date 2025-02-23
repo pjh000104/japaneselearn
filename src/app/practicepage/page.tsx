@@ -1,6 +1,6 @@
 "use client";
 
-import { searchWord } from "./actions";
+import { searchWord } from "../actions";
 import Sidebar from "./sidebar";
 import { useEffect, useState, useActionState } from "react";
 import { useRouter } from "next/router"
@@ -9,7 +9,7 @@ import { createConnection } from "net";
 import { createContext } from "vm";
 
 export default function WordSearch() {
-    const [state, formAction] = useActionState(searchWord, { english: "", romaji: "", error: "" });
+    const [state, formAction] = useActionState(searchWord, { english: "", romaji: "", error: "", id:0 });
     const [wordList, setWordList] = useState<{ id: number; english: string; romaji: string}[]>(() =>[]);
 
 
@@ -21,7 +21,7 @@ export default function WordSearch() {
         }
         setWordList((prevList) => [
             ...prevList,
-            { id: prevList.length + 1, english: state.english ?? "", romaji: state.romaji ?? "" },
+            { id: state.id ?? 0, english: state.english ?? "", romaji: state.romaji ?? "" },
         ]);
     }, [state]);
     
