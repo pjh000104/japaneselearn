@@ -1,17 +1,15 @@
 "use client";
 
-import { searchWord } from "../actions";
+import { searchWord, getLoginStatus } from "../actions";
 import Sidebar from "./sidebar";
 import { useEffect, useState, useActionState } from "react";
-import { useRouter } from "next/router"
-import { list } from "postcss";
-import { createConnection } from "net";
-import { createContext } from "vm";
+import LoginOutButton from "../components/login-logout-button";
+import Link from "next/link";
 
 export default function WordSearch() {
     const [state, formAction] = useActionState(searchWord, { english: "", romaji: "", error: "", id:0 });
     const [wordList, setWordList] = useState<{ id: number; english: string; romaji: string}[]>(() =>[]);
-
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 
     useEffect(() => {
@@ -29,11 +27,29 @@ export default function WordSearch() {
         setWordList(wordList.filter(item => item.id != id));
     }
 
+     useEffect (()=> {
+            async function fetchdata () {
+                const data = await getLoginStatus();
+                if (data.user) {
+                    setIsLoggedIn(true);
+                } else {
+                    setIsLoggedIn(false);
+                } 
+            }
+            fetchdata();
+        },[])
 
     return (
         <div className="flex">
-            <Sidebar list = {wordList} onDelete = {handleDelete}></Sidebar>
+            <Sidebar list = {wordList} 
+                     onDelete = {handleDelete}
+                     isLoggedIn = {isLoggedIn}>
+            </Sidebar>
             <div className=" flex flex-col items-center justify-center w-4/5">
+                <div className=" flex gap-5 absolute top-5 right-10">
+                    {isLoggedIn && <Link href="/wordsets" className="bg-gray-800 text-white  p-2 rounded hover:bg-gray-600  h-1/2">Myword sets</Link>}
+                    <LoginOutButton/></div>
+                <h2 className=" text-4xl">No Kanji Japanese Word Translator</h2>
                 <form action={formAction} className="flex justify-center items-center space-y-4 w-1/2">
                     <input
                     type="text"

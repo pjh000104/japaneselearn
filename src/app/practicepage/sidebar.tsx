@@ -4,10 +4,10 @@ import CreateWordSetButton from "./createWordSetButton"
 interface SidebarProps {
   list: { id: number; english: string; romaji: string; icon?: React.ReactNode }[];
   onDelete: (id: number) => void;
+  isLoggedIn: boolean;
 }
 
-
-const Sidebar: React.FC<SidebarProps> = ({ list, onDelete }) => {
+const Sidebar: React.FC<SidebarProps> = ({ list, onDelete, isLoggedIn }) => {
 
     const handleNavigate = (list: object[]) => {
         if (typeof window !== "undefined") {
@@ -21,7 +21,7 @@ const Sidebar: React.FC<SidebarProps> = ({ list, onDelete }) => {
             <button onClick={() => handleNavigate(list)}>
                 <Link href="/memorize">Go to Memorize</Link>
             </button>
-            <CreateWordSetButton wordlist = {list}></CreateWordSetButton>
+            {isLoggedIn && <CreateWordSetButton wordlist = {list}></CreateWordSetButton>}
             <ul className="space-y-2">
                 {list.map((item) => (
                 <li

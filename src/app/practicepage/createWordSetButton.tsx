@@ -3,11 +3,17 @@
 import { useState } from "react";
 import { createWordSet } from "@/app/actions";
 
-interface CreateWordSetButtonProps {
-  children: React.ReactNode;
+interface Word {
+  id: number;
+  english: string;
+  romaji: string;
 }
 
-export default function CreateWordSetButton({wordlist}) {
+interface CreateWordSetButtonProps {
+  wordlist: Word[];
+}
+
+export default function CreateWordSetButton({ wordlist }: CreateWordSetButtonProps) {
     const [loading, setLoading] = useState(false);
     const [title, setTitle] = useState("");
 
@@ -32,14 +38,14 @@ export default function CreateWordSetButton({wordlist}) {
           placeholder="Enter word set title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="border p-2 rounded"
+          className="border p-2 rounded w-3/4 h-1/2 text-black"
         />
         <button
           onClick={handleCreate}
           disabled={loading || !title.trim()}
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
+          className="bg-blue-500 text-white  rounded hover:bg-blue-600 disabled:bg-gray-400 w-1/4 "
         >
-          {loading ? "Creating..." : "Create WordSet"}
+          {loading ? "Creating..." : "create"}
         </button>
       </div>
     );

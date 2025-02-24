@@ -88,28 +88,41 @@ export async function searchWordSet() {
 }
 
 export async function displayWordSet(listId: string) {
-  // Step 1: Get word IDs
   const wordIds = await db
     .select({ wordId: wordSetWords.wordId })
     .from(wordSetWords)
     .where(eq(wordSetWords.wordSetId, listId));
 
-  // Extract word IDs from the array of objects
   const wordIdList = wordIds.map(row => row.wordId);
 
   let wordlist = [];
 
-  // Step 2: Fetch words using for...of (ensuring await works correctly)
   for (const wordId of wordIdList) {
     const word = await db
       .select({ english: words.meaning, romaji: words.romaji })
       .from(words)
-      .where(eq(words.id, wordId))
-      .limit(1); // Limit is not strictly necessary for primary key queries
+      .where(eq(words.id, wordId));
 
     if (word.length > 0) {
-      wordlist.push({ wordId, ...word[0] }); // Push word data into the list
+      wordlist.push({ wordId, ...word[0] }); 
     }
   }
   return wordlist;
+}
+
+export async function deleteWordSet(wordSetId: string) {
+  await db.delete(wordSet).where(eq(wordSet.id, wordSetId));
+}
+
+export async function getLoginStatus() {
+  let session = await auth();
+  let sessionType = "google";
+  
+  if (!session) {
+    session = await getSession();
+    sessionType = "custom";
+  }
+
+  return({user:session?.user ,sessionType})
+  
 }
