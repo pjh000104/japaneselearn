@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createWordSet } from "@/app/actions";
+import DOMPurify from "isomorphic-dompurify";
 
 interface Word {
   id: number;
@@ -18,9 +19,11 @@ export default function CreateWordSetButton({ wordlist }: CreateWordSetButtonPro
     const [title, setTitle] = useState("");
 
     async function handleCreate() {
+      const safeTitle = DOMPurify.sanitize(title);
+
       setLoading(true);
       try {
-        await createWordSet(title,wordlist);
+        await createWordSet(safeTitle,wordlist);
         alert("WordSet created successfully!");
         setTitle(""); // Reset input field
       } catch (error) {

@@ -13,6 +13,7 @@
     "@libsql/client": "^0.14.0",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.39.2",
+    "isomorphic-dompurify": "^2.22.0",
     "jose": "^5.9.6",
     "next": "15.1.6",
     "next-auth": "^5.0.0-beta.25",

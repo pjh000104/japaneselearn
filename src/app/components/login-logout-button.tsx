@@ -9,6 +9,7 @@ export default function LoginOutButton() {
   const [user, setUser] = useState<any>(null);
   const [sessionType, setSessionType] = useState("");
 
+
   useEffect(() => {
     async function fetchSession() {
       const data = await getLoginStatus();

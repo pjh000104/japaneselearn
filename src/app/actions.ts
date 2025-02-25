@@ -1,6 +1,6 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import { db } from "@/lib/db/db";
 import { words,wordSet,users,wordSetWords } from "@/lib/db/schema";
 import { auth } from "@/auth"
@@ -112,6 +112,15 @@ export async function displayWordSet(listId: string) {
 
 export async function deleteWordSet(wordSetId: string) {
   await db.delete(wordSet).where(eq(wordSet.id, wordSetId));
+}
+
+export async function deleteWord(wordSetId: string, wordId: number) {
+  await db.delete(wordSetWords).where(
+    and(
+      eq(wordSetWords.wordSetId, wordSetId),
+      eq(wordSetWords.wordId, wordId)
+    )
+  );
 }
 
 export async function getLoginStatus() {

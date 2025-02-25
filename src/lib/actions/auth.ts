@@ -10,7 +10,7 @@ export const loginGoogle = async () => {
 };
 
 export const logoutGoogle = async () => {
-    await signOut({redirectTo: "/" })
+    await signOut({redirectTo: "/loginpage" })
 };
 
 const secretKey = "secret";
