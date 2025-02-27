@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import React from "react";
 import { displayWordSet } from "../actions";
 import Card from "./card";
@@ -8,7 +8,7 @@ import Sidebar from "./sidebar";
 import HomeButton from "../components/homebutton";
 import LoginOutButton from "../components/login-logout-button";
 
-export default function Page() {
+function UsermemorizePage() {
   const searchParams = useSearchParams();
   const listId = searchParams.get("q")??"";
   const [wordList, setWordList] = useState<{english: string, romaji: string, wordId: number}[]>([])
@@ -79,3 +79,11 @@ export default function Page() {
       )
 
 }
+
+export default function Page() {
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <UsermemorizePage />
+      </Suspense>
+    );
+  }

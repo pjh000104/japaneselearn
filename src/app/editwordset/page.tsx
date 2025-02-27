@@ -1,14 +1,14 @@
 "use client"
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState, useActionState } from "react";
+import { useEffect, useState, useActionState, Suspense } from "react";
 import DOMPurify from "isomorphic-dompurify";
 import { searchWord, displayWordSet, addWord} from "../actions";
 import Sidebar from "./sidebar";
 import HomeButton from "../components/homebutton";
 import LoginOutButton from "../components/login-logout-button";
 
-export default function Page() {
+function EditWordsetPage() {
     const [state, formAction] = useActionState(searchWord, { english: "", romaji: "", error: "", wordId: 0 });
     const [wordList, setWordList] = useState<{english: string, romaji: string, wordId: number}[]>([])
     const [inputWord, setInputWord] = useState(""); // State for controlled input
@@ -35,7 +35,7 @@ export default function Page() {
             return;
         }
         addWordtoSet();
-    }, [state]);
+    }, []);
 
     
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,3 +95,11 @@ export default function Page() {
         </div>
     )
 }
+
+export default function Page() {
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <EditWordsetPage />
+      </Suspense>
+    );
+  }
