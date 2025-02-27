@@ -138,12 +138,11 @@ interface User {
   id: string;
 }
 
-export async function getLoginStatus(): Promise<{user: User | null, sessionType: string}> {
+export async function getLoginStatus(): Promise<{user: User | null, sessionType: string | null}> {
   let session = await auth();
   let sessionType = "google";
   
   if (!session) {
-    session = await getSession();
     sessionType = "custom";
   }
 
