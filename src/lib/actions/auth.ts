@@ -11,7 +11,7 @@ export const loginGoogle = async () => {
 };
 
 export const logoutGoogle = async () => {
-    await signOut({redirectTo: "/loginpage" })
+    await signOut({redirectTo: "/login" })
 };
 
 const secretKey = "secret";
