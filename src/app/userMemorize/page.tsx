@@ -5,6 +5,8 @@ import React from "react";
 import { displayWordSet } from "../actions";
 import Card from "./card";
 import Sidebar from "./sidebar";
+import HomeButton from "../components/homebutton";
+import LoginOutButton from "../components/login-logout-button";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -52,6 +54,10 @@ export default function Page() {
   }
   return (
         <div className="flex">
+            <div className="flex gap-5 absolute top-5 right-10">
+                <HomeButton/>
+                <LoginOutButton />
+            </div>
             {showWordList && <Sidebar wordList = {wordList}
                      wordListId= {listId}/>}
             <div className=" flex flex-col justify-center items-center h-screen w-screen">

@@ -17,7 +17,7 @@ const Sidebar: React.FC<SidebarProps> = ({ list, onDelete, isLoggedIn }) => {
 
     return (
         <aside className="w-64 bg-gray-800 text-white h-dvh p-4 overflow-auto">
-            <p>Word List</p>
+            <h1 className="text-xl">Word List</h1>
             <button onClick={() => handleNavigate(list)}>
                 <Link href="/memorize">Go to Memorize</Link>
             </button>

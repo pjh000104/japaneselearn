@@ -10,7 +10,7 @@ import { PgInteger } from "drizzle-orm/pg-core";
 
 // Define a strict type for the state
 interface FormState {
-  id?: number;
+  wordId?: number;
   error?: string;
   romaji?: string;
   english?: string;
@@ -30,7 +30,7 @@ export async function searchWord(prevState: FormState, formData: FormData): Prom
     return { error: "Word not found." };
   }
 
-  return { id: info[0].id, english: info[0].meaning, romaji: info[0].romaji };
+  return { wordId: info[0].id, english: info[0].meaning, romaji: info[0].romaji };
 }
 
 // create new word set
@@ -121,6 +121,17 @@ export async function deleteWord(wordSetId: string, wordId: number) {
       eq(wordSetWords.wordId, wordId)
     )
   );
+}
+
+export async function addWord(wordSetId: string, wordId: number|any) {
+  try {
+    await db.insert(wordSetWords).values({
+      wordSetId,
+      wordId,
+    });
+  } catch (error) {
+    console.error("Error adding word to wordset: ", error);
+  }
 }
 
 export async function getLoginStatus() {

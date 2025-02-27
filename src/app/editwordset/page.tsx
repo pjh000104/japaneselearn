@@ -1,41 +1,44 @@
-"use client";
+"use client"
 
-import { searchWord, getLoginStatus } from "./actions";
-import Sidebar from "./components/sidebar";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState, useActionState } from "react";
-import LoginOutButton from "./components/login-logout-button";
-import Link from "next/link";
 import DOMPurify from "isomorphic-dompurify";
+import { searchWord, displayWordSet, addWord} from "../actions";
+import Sidebar from "./sidebar";
+import HomeButton from "../components/homebutton";
+import LoginOutButton from "../components/login-logout-button";
 
-export default function WordSearch() {
+export default function Page() {
     const [state, formAction] = useActionState(searchWord, { english: "", romaji: "", error: "", wordId: 0 });
-    const [wordList, setWordList] = useState<{ id: number; english: string; romaji: string }[]>(() => []);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [wordList, setWordList] = useState<{english: string, romaji: string, wordId: number}[]>([])
     const [inputWord, setInputWord] = useState(""); // State for controlled input
+    const searchParams = useSearchParams();
+    const listId = searchParams.get("q")??"";
+
+    useEffect(()=> {
+    if (!listId) return;
+    async function fetchData() {
+        try{
+            const response = await displayWordSet(listId);
+            setWordList(response);
+        }
+        catch(error) {
+            console.error("error is", error)
+        }
+    }
+    fetchData();
+    },[listId]);
 
     useEffect(() => {
         if (!state.romaji) return;
         if (wordList.some(item => item.english === state.english)) {
             return;
         }
-        setWordList((prevList) => [
-            ...prevList,
-            { id: state.wordId ?? 0, english: state.english ?? "", romaji: state.romaji ?? "" },
-        ]);
+        addWordtoSet();
+        console.log("wordId: ", state.wordId);
     }, [state]);
 
-    const handleDelete = (id: number) => {
-        setWordList(wordList.filter(item => item.id !== id));
-    };
-
-    useEffect(() => {
-        async function fetchdata() {
-            const data = await getLoginStatus();
-            setIsLoggedIn(!!data.user);
-        }
-        fetchdata();
-    }, []);
-
+    
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
     
@@ -44,6 +47,11 @@ export default function WordSearch() {
             setInputWord(value);
         }
     };
+
+    async function addWordtoSet() {
+        await addWord(listId, state.wordId);
+        window.location.reload();
+    }
     
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -51,21 +59,20 @@ export default function WordSearch() {
         const formData = new FormData();
         formData.append("word", sanitizedInput);
         formAction(formData);
+        console.log("wordID:", state.wordId)
     };
 
     return (
         <div className="flex">
-            <Sidebar list={wordList} onDelete={handleDelete} isLoggedIn={isLoggedIn} />
+            <Sidebar 
+                wordList = {wordList}
+                wordListId= {listId}>
+            </Sidebar>
             <div className="flex flex-col items-center justify-center w-4/5">
                 <div className="flex gap-5 absolute top-5 right-10">
-                    {isLoggedIn && (
-                        <Link href="/wordsets" className="bg-gray-800 text-white p-2 rounded hover:bg-gray-600 h-1/2">
-                            My Word Sets
-                        </Link>
-                    )}
+                    <HomeButton/>
                     <LoginOutButton />
                 </div>
-                <h2 className="text-4xl">No Kanji Japanese Word Translator</h2>
                 <form onSubmit={handleSubmit} className="flex justify-center items-center mt-4 w-1/2">
                     <input
                         type="text"
@@ -85,6 +92,7 @@ export default function WordSearch() {
                     {state.romaji && <p className="text-4xl">Pronunciation: {state.romaji}</p>}
                 </div>
             </div>
+            
         </div>
-    );
+    )
 }

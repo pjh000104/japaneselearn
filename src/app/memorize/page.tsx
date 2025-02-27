@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState} from "react";
 import Card from "./card"
+import HomeButton from "../components/homebutton";
+import LoginOutButton from "../components/login-logout-button";
 
 export default function Page() {
     const [index, setIndex] = useState(0)
@@ -40,9 +42,15 @@ export default function Page() {
 
     return (
         <div className=" flex flex-col justify-center items-center h-screen">
+            <div className="flex gap-5 absolute top-5 right-10">
+                <HomeButton/>
+                <LoginOutButton />
+            </div>
             <Card 
                 english = {word?.english}
                 romaji = {word?.romaji}
+                index = {index}
+                length = {wordList.length}
             />
             <div className="flex mt-5 gap-2">
                 <button className=" p-1.5 px-3 bg-slate-300 rounded-lg" onClick={handlePrevButtonClick}>Prev</button>

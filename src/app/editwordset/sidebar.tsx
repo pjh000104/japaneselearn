@@ -31,6 +31,12 @@ export default function Sidebar({wordList, wordListId} : SidebarProps) {
                         {item.english}: {item.romaji}
                     </span>
                     </div>
+                    <button
+                    onClick={() => onDelete(item.wordId)}
+                    className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
+                    >
+                    Delete
+                    </button>
                 </li>
                 ))}
             </ul>
