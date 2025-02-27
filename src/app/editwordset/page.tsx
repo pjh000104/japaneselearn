@@ -35,7 +35,6 @@ export default function Page() {
             return;
         }
         addWordtoSet();
-        console.log("wordId: ", state.wordId);
     }, [state]);
 
     
@@ -49,7 +48,7 @@ export default function Page() {
     };
 
     async function addWordtoSet() {
-        await addWord(listId, state.wordId);
+        await addWord(listId, state.wordId ?? 0);
         window.location.reload();
     }
     

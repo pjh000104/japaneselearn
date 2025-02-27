@@ -121,7 +121,7 @@ export async function deleteWord(wordSetId: string, wordId: number) {
   );
 }
 
-export async function addWord(wordSetId: string, wordId: number|any) {
+export async function addWord(wordSetId: string, wordId: number) {
   try {
     await db.insert(wordSetWords).values({
       wordSetId,
@@ -132,7 +132,13 @@ export async function addWord(wordSetId: string, wordId: number|any) {
   }
 }
 
-export async function getLoginStatus() {
+interface User {
+  name: string;
+  email: string;
+  id: string;
+}
+
+export async function getLoginStatus(): Promise<{user: User | null, sessionType: string}> {
   let session = await auth();
   let sessionType = "google";
   
@@ -141,6 +147,15 @@ export async function getLoginStatus() {
     sessionType = "custom";
   }
 
-  return({user:session?.user ,sessionType})
-  
+  const user = session?.user
+  ? { 
+      ...session.user, 
+      name: session.user.name ?? "Unknown User", 
+      email: session.user.email ?? "", // Ensure email is always a string
+      id: session.user.id ?? "", // Ensure id is always a string
+      image: session.user.image ?? "", // Ensure image is always a string
+    }
+  : null;
+
+  return({user,sessionType});
 }

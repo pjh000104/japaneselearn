@@ -5,14 +5,20 @@ import { getLoginStatus } from "@/app/actions";
 import { SignOutGoogle } from "./sign-out-button-google";
 import Link from "next/link";
 
+interface User {
+  name: string;
+  email: string;
+  id: string;
+}
+
 export default function LoginOutButton() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   // const [sessionType, setSessionType] = useState("");
 
 
   useEffect(() => {
     async function fetchSession() {
-      const data = await getLoginStatus();
+      const data = await getLoginStatus(); 
       setUser(data.user);
       // setSessionType(data.sessionType);
     }
