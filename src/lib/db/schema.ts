@@ -1,6 +1,4 @@
 import { primaryKey, sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
-import { createClient } from "@libsql/client"
-import { drizzle } from "drizzle-orm/libsql"
 import type { AdapterAccountType } from "next-auth/adapters"
 
 export const words = sqliteTable("words", {

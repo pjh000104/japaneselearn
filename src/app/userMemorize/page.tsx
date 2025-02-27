@@ -58,8 +58,7 @@ export default function Page() {
                 <HomeButton/>
                 <LoginOutButton />
             </div>
-            {showWordList && <Sidebar wordList = {wordList}
-                     wordListId= {listId}/>}
+            {showWordList && <Sidebar wordList = {wordList}/>}
             <div className=" flex flex-col justify-center items-center h-screen w-screen">
                 <Card 
                     english = {word?.english}

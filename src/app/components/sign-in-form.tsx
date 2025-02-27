@@ -3,7 +3,7 @@
 import { redirect } from "next/navigation";
 import {login} from "@/lib/actions/auth"
 
-export default function () {
+export default function SignInForm() {
     return(
         <form
         action={async (formData) => {

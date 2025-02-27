@@ -5,8 +5,6 @@ import { db } from "@/lib/db/db";
 import { words,wordSet,users,wordSetWords } from "@/lib/db/schema";
 import { auth } from "@/auth"
 import { getSession } from "@/lib/actions/auth"
-import { IntegerConfig } from "drizzle-orm/sqlite-core";
-import { PgInteger } from "drizzle-orm/pg-core";
 
 // Define a strict type for the state
 interface FormState {
@@ -95,7 +93,7 @@ export async function displayWordSet(listId: string) {
 
   const wordIdList = wordIds.map(row => row.wordId);
 
-  let wordlist = [];
+  const wordlist = [];
 
   for (const wordId of wordIdList) {
     const word = await db

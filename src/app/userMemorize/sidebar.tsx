@@ -1,21 +1,13 @@
-import { deleteWord } from "../actions";
+
 interface SidebarProps {
     wordList: {
         english: string;
         romaji: string;
         wordId: number;
     }[];
-    wordListId: string;
 }
-export default function Sidebar({wordList, wordListId} : SidebarProps) {
-    async function onDelete(wordId: number) {
-        try{
-            await deleteWord(wordListId, wordId);
-            window.location.reload();
-        } catch(error) {
-            console.error("error occured: ", error);
-        }
-    }
+export default function Sidebar({wordList} : SidebarProps) {
+
     return (
         <aside className="w-1/5 bg-gray-800 text-white h-dvh p-4 overflow-auto">
             <h1 className="text-xl">Word List</h1>
