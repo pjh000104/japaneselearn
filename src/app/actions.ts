@@ -4,7 +4,6 @@ import { eq, and } from "drizzle-orm";
 import { db } from "@/lib/db/db";
 import { words,wordSet,users,wordSetWords } from "@/lib/db/schema";
 import { auth } from "@/auth"
-import { getSession } from "@/lib/actions/auth"
 
 // Define a strict type for the state
 interface FormState {
@@ -139,7 +138,7 @@ interface User {
 }
 
 export async function getLoginStatus(): Promise<{user: User | null, sessionType: string | null}> {
-  let session = await auth();
+  const session = await auth();
   let sessionType = "google";
   
   if (!session) {
