@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { signIn, signOut } from "@/auth"
 
 export const loginGoogle = async () => {
-    await signIn("google", { redirectTo: "/api/auth/callback/google" });
+    await signIn("google", { redirectTo: "/" });
 
 };
 
