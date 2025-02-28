@@ -49,7 +49,7 @@ function EditWordsetPage() {
 
     async function addWordtoSet() {
         await addWord(listId, state.wordId ?? 0);
-        window.location.reload();
+        // window.location.reload();
     }
     
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
