@@ -11,6 +11,7 @@
   "dependencies": {
     "@auth/drizzle-adapter": "^1.7.4",
     "@libsql/client": "^0.14.0",
+    "@vitalets/google-translate-api": "^9.2.1",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.39.2",
     "isomorphic-dompurify": "^2.22.0",
@@ -26,7 +27,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "drizzle-kit": "^0.30.4",
+    "drizzle-kit": "^0.19.1",
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
     "postcss": "^8",
