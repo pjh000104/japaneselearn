@@ -31,6 +31,7 @@ function EditWordsetPage() {
 
     const addWordtoSet = useCallback(async () => {
         await addWord(listId, state.wordId ?? 0);
+        window.location.reload();
     }, [listId, state.wordId]);
     
     useEffect(() => {
@@ -42,7 +43,6 @@ function EditWordsetPage() {
     }, [state.romaji, state.english, wordList, addWordtoSet]);
     
 
-    
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
     
@@ -53,8 +53,6 @@ function EditWordsetPage() {
     };
 
 
-    
-    
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const sanitizedInput = DOMPurify.sanitize(inputWord); // Sanitize user input
@@ -63,6 +61,7 @@ function EditWordsetPage() {
         formAction(formData);
         console.log("wordID:", state.wordId)
     };
+
 
     return (
         <div className="flex">
