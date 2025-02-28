@@ -1,7 +1,7 @@
 "use client"
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState, useActionState, Suspense } from "react";
+import { useEffect, useState, useActionState, Suspense, useCallback } from "react";
 import DOMPurify from "isomorphic-dompurify";
 import { searchWord, displayWordSet, addWord} from "../actions";
 import Sidebar from "./sidebar";
@@ -29,13 +29,18 @@ function EditWordsetPage() {
     fetchData();
     },[listId]);
 
+    const addWordtoSet = useCallback(async () => {
+        await addWord(listId, state.wordId ?? 0);
+    }, [listId, state.wordId]);
+    
     useEffect(() => {
         if (!state.romaji) return;
         if (wordList.some(item => item.english === state.english)) {
             return;
         }
         addWordtoSet();
-    }, []);
+    }, [state.romaji, state.english, wordList, addWordtoSet]);
+    
 
     
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,10 +52,8 @@ function EditWordsetPage() {
         }
     };
 
-    async function addWordtoSet() {
-        await addWord(listId, state.wordId ?? 0);
-        // window.location.reload();
-    }
+
+    
     
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

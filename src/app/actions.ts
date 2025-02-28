@@ -122,10 +122,13 @@ export async function deleteWord(wordSetId: string, wordId: number) {
 
 export async function addWord(wordSetId: string, wordId: number) {
   try {
+    console.log("inserting word into database");
     await db.insert(wordSetWords).values({
       wordSetId,
       wordId,
     });
+    console.log("Successfuly inserted word into wordset");
+    
   } catch (error) {
     console.error("Error adding word to wordset: ", error);
   }
