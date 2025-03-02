@@ -9,7 +9,7 @@ interface SidebarProps {
 export default function Sidebar({wordList} : SidebarProps) {
 
     return (
-        <aside className="w-1/5 bg-gray-800 text-white h-dvh p-4 overflow-auto">
+        <aside className="w-64 bg-gray-800 text-white h-dvh p-4 overflow-auto">
             <h1 className="text-xl">Word List</h1>
 
             <ul className="space-y-2">

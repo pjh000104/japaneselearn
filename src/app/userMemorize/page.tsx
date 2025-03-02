@@ -52,6 +52,22 @@ function UsermemorizePage() {
           setWord(wordList[newIndex]);
       }
   }
+
+  const randomizeWordList = (array: { english: string; romaji: string; wordId: number }[]) => {
+    const shuffled = [...array]; // Create a copy to avoid mutating state directly
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // Swap elements
+    }
+    return shuffled;
+  };
+
+  function handleRandomizeButtonClick() {
+    setWordList(randomizeWordList(wordList));
+    setWord(wordList[0]);
+    setIndex(-1);
+  }
+  
   return (
         <div className="flex">
             <div className="flex gap-5 absolute top-5 right-10">
@@ -74,6 +90,7 @@ function UsermemorizePage() {
                 {showWordList ? <p>hide wordlist</p>:
                                 <p>show wordlist</p>}
             </button>
+            <button onClick={handleRandomizeButtonClick} className=" mt-5 p-1.5 px-3 bg-slate-300 rounded-lg">Randomize Order</button>
             </div>
         </div>
       )
