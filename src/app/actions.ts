@@ -1,6 +1,6 @@
 "use server";
 
-import { eq, and } from "drizzle-orm";
+import { eq, and, sql } from "drizzle-orm";
 import { db } from "@/lib/db/db";
 import { words,wordSet,users,wordSetWords } from "@/lib/db/schema";
 import { auth } from "@/auth"
@@ -13,6 +13,10 @@ interface FormState {
   english?: string;
 }
 
+function sanitizeForRegex(input: string): string {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape special regex characters
+}
+
 // Ensure the function receives `prevState` as the first argument
 export async function searchWord(prevState: FormState, formData: FormData): Promise<FormState> {
   const word = formData.get("word") as string;
@@ -20,11 +24,26 @@ export async function searchWord(prevState: FormState, formData: FormData): Prom
   if (!word) {
     return { error: "Please enter a word!" };
   }
-  
-  const info = await db.select().from(words).where(eq(words.meaning, word));
+
+  const sanitizedWord = sanitizeForRegex(word);
+
+  let info = await db.select().from(words).where(eq(words.meaning, word));
+  if (info.length>0) {
+    console.log("Exact match found:");
+  }
+
+  else {
+    
+    const relatedQuery = sql`
+    SELECT id, word, meaning, furigana, romaji
+    FROM words
+    WHERE meaning REGEXP ${`\\b(to\\s+)?${sanitizedWord}(ing)?\\b`};
+    `;
+    info = await db.all(relatedQuery);
+  }
 
   if (info.length === 0) {
-    return { error: "Word not found." };
+    return {error: "word not found"};
   }
 
   return { wordId: info[0].id, english: info[0].meaning, romaji: info[0].romaji };
