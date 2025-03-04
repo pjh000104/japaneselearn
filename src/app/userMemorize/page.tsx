@@ -54,10 +54,9 @@ function UsermemorizePage() {
   }
 
   async function handleSpeech() {
-    const audioUrl = await getSpeech(word.wordId); // Get cached or new URL
+    const audioUrl = await getSpeech(word.wordId); 
     
     if (!audioUrl) {
-      // If there's no valid URL (e.g., VoiceRSS limit reached), show an error message
       alert("Audio service is unavailable. Please try again later.");
       return;
     }
@@ -88,23 +87,26 @@ function UsermemorizePage() {
                 <LoginOutButton />
             </div>
             {showWordList && <Sidebar wordList = {wordList}/>}
-            <div className=" flex flex-col justify-center items-center h-screen w-screen">
+            <div className=" flex flex-col justify-center items-center h-screen w-screen gap-2">
+                <button onClick={()=>toggleWordList()} className="p-1.5 px-3 bg-slate-300 rounded-lg">
+                    {showWordList ? <p>hide wordlist</p>:
+                                    <p>show wordlist</p>}
+                </button>
                 <Card 
                     english = {word?.english}
                     romaji = {word?.romaji}
                     index = {index}
                     length = {wordList.length}
                 />
-                <div className="flex mt-5 gap-2">
+                <div className="flex gap-2">
                     <button className=" p-1.5 px-3 bg-slate-300 rounded-lg" onClick={handlePrevButtonClick}>Prev</button>
                     <button onClick={handleNextButtonClick} className=" p-1.5 px-3 bg-slate-300 rounded-lg">Next</button>
                 </div>
-            <button onClick={()=>toggleWordList()} className=" mt-5 p-1.5 px-3 bg-slate-300 rounded-lg">
-                {showWordList ? <p>hide wordlist</p>:
-                                <p>show wordlist</p>}
-            </button>
-            <button onClick={handleSpeech}>speech</button>
-            <button onClick={handleRandomizeButtonClick} className=" mt-5 p-1.5 px-3 bg-slate-300 rounded-lg">Randomize Order</button>
+                <div className="flex flex-col gap-2">
+                    <button onClick={handleSpeech} className="p-1.5 px-3 bg-slate-300 rounded-lg">Pronunciation</button>
+                    <button onClick={handleRandomizeButtonClick} className="p-1.5 px-3 bg-slate-300 rounded-lg">Randomize Order</button>
+                </div>
+
             </div>
         </div>
       )

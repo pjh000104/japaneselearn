@@ -31,7 +31,7 @@ export async function searchWord(prevState: FormState, formData: FormData): Prom
 }
 
 // create new word set
-export async function createWordSet(title: string, wordlist: {id: number; english: string; romaji: string }[]) {
+export async function createWordSet(title: string, wordlist: {wordId: number; english: string; romaji: string }[]) {
     const session = await auth();
     if (!session || !session.user?.email) {
       throw new Error("User not authenticated");
@@ -45,7 +45,7 @@ export async function createWordSet(title: string, wordlist: {id: number; englis
     }).returning({ id: wordSet.id});
 
     if (!newWordSet) throw new Error("Failed to create wordSet");
-    const wordIds = wordlist.map(word => word.id);
+    const wordIds = wordlist.map(word => word.wordId);
     const wordSetId = newWordSet.id;
     if (wordIds.length > 0) {
       await db.insert(wordSetWords).values(

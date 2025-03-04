@@ -2,7 +2,7 @@ import Link from "next/link";
 import React from "react";
 import CreateWordSetButton from "./createWordSetButton"
 interface SidebarProps {
-  list: { id: number; english: string; romaji: string; icon?: React.ReactNode }[];
+  list: { wordId: number; english: string; romaji: string; icon?: React.ReactNode }[];
   onDelete: (id: number) => void;
   isLoggedIn: boolean;
 }
@@ -25,7 +25,7 @@ const Sidebar: React.FC<SidebarProps> = ({ list, onDelete, isLoggedIn }) => {
             <ul className="space-y-2">
                 {list.map((item) => (
                 <li
-                    key={item.id}
+                    key={item.wordId}
                     className="flex items-center justify-between p-2 hover:bg-gray-700 rounded-lg cursor-pointer"
                 >
                     <div className="flex items-center space-x-2">
@@ -35,7 +35,7 @@ const Sidebar: React.FC<SidebarProps> = ({ list, onDelete, isLoggedIn }) => {
                     </span>
                     </div>
                     <button
-                    onClick={() => onDelete(item.id)}
+                    onClick={() => onDelete(item.wordId)}
                     className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
                     >
                     Delete
