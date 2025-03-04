@@ -9,9 +9,18 @@ import DOMPurify from "isomorphic-dompurify";
 
 export default function WordSearch() {
     const [state, formAction] = useActionState(searchWord, { english: "", romaji: "", error: "", wordId: 0 });
-    const [wordList, setWordList] = useState<{ id: number; english: string; romaji: string }[]>(() => []);
+    const [wordList, setWordList] = useState<{ wordId: number; english: string; romaji: string }[]>(() => []);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [inputWord, setInputWord] = useState(""); // State for controlled input
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const storedList = localStorage.getItem("wordList");
+            if (storedList) {
+                setWordList(JSON.parse(storedList));
+            }
+        }
+    }, []);
 
     useEffect(() => {
         if (!state.romaji) return;
@@ -20,12 +29,12 @@ export default function WordSearch() {
         }
         setWordList((prevList) => [
             ...prevList,
-            { id: state.wordId ?? 0, english: state.english ?? "", romaji: state.romaji ?? "" },
+            { wordId: state.wordId ?? 0, english: state.english ?? "", romaji: state.romaji ?? "" },
         ]);
     }, [state]);
 
     const handleDelete = (id: number) => {
-        setWordList(wordList.filter(item => item.id !== id));
+        setWordList(wordList.filter(item => item.wordId !== id));
     };
 
     useEffect(() => {
@@ -51,6 +60,7 @@ export default function WordSearch() {
         const formData = new FormData();
         formData.append("word", sanitizedInput);
         formAction(formData);
+        setInputWord("");
     };
 
     return (

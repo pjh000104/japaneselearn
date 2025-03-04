@@ -5,7 +5,7 @@ import { createWordSet } from "@/app/actions";
 import DOMPurify from "isomorphic-dompurify";
 
 interface Word {
-  id: number;
+  wordId: number;
   english: string;
   romaji: string;
 }

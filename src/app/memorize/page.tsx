@@ -4,10 +4,11 @@ import React, { useEffect, useState} from "react";
 import Card from "./card"
 import HomeButton from "../components/homebutton";
 import LoginOutButton from "../components/login-logout-button";
+import { getSpeech } from "../actions";
 
 export default function Page() {
     const [index, setIndex] = useState(0)
-    const [wordList, setList] = useState<{ id: number; english: string; romaji: string }[]>([]);
+    const [wordList, setList] = useState<{ wordId: number; english: string; romaji: string }[]>([]);
     const [word, setWord] = useState(wordList[1])
     
     // will use database to fetch wordlist later
@@ -40,8 +41,20 @@ export default function Page() {
         }
     }
 
+    async function handleSpeech() {
+    const audioUrl = await getSpeech(word.wordId); 
+    
+    if (!audioUrl) {
+        alert("Audio service is unavailable. Please try again later.");
+        return;
+    }
+    
+    const audio = new Audio(audioUrl);
+    audio.play();
+    }
+
     return (
-        <div className=" flex flex-col justify-center items-center h-screen">
+        <div className=" flex flex-col justify-center items-center h-screen gap-2">
             <div className="flex gap-5 absolute top-5 right-10">
                 <HomeButton/>
                 <LoginOutButton />
@@ -52,11 +65,11 @@ export default function Page() {
                 index = {index}
                 length = {wordList.length}
             />
-            <div className="flex mt-5 gap-2">
+            <div className="flex gap-2">
                 <button className=" p-1.5 px-3 bg-slate-300 rounded-lg" onClick={handlePrevButtonClick}>Prev</button>
                 <button onClick={handleNextButtonClick} className=" p-1.5 px-3 bg-slate-300 rounded-lg">Next</button>
             </div>
-
+            <button className=" p-1.5 px-3 bg-slate-300 rounded-lg" onClick={handleSpeech}>Pronunciation</button>
         </div>
     )
 }

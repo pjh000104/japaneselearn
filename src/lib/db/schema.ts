@@ -8,6 +8,7 @@ export const words = sqliteTable("words", {
   furigana: text("furigana").notNull(),
   romaji: text("romaji").notNull(),
   level: integer("level").notNull(),
+  audio_url: text("audio_url"),
 });
 
 export const wordSet = sqliteTable("wordSet", {

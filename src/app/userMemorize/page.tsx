@@ -2,7 +2,7 @@
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
 import React from "react";
-import { displayWordSet } from "../actions";
+import { displayWordSet, getSpeech } from "../actions";
 import Card from "./card";
 import Sidebar from "./sidebar";
 import HomeButton from "../components/homebutton";
@@ -53,6 +53,18 @@ function UsermemorizePage() {
       }
   }
 
+  async function handleSpeech() {
+    const audioUrl = await getSpeech(word.wordId); 
+    
+    if (!audioUrl) {
+      alert("Audio service is unavailable. Please try again later.");
+      return;
+    }
+  
+    const audio = new Audio(audioUrl);
+    audio.play();
+  }
+  
   const randomizeWordList = (array: { english: string; romaji: string; wordId: number }[]) => {
     const shuffled = [...array]; // Create a copy to avoid mutating state directly
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -75,22 +87,26 @@ function UsermemorizePage() {
                 <LoginOutButton />
             </div>
             {showWordList && <Sidebar wordList = {wordList}/>}
-            <div className=" flex flex-col justify-center items-center h-screen w-screen">
+            <div className=" flex flex-col justify-center items-center h-screen w-screen gap-2">
+                <button onClick={()=>toggleWordList()} className="p-1.5 px-3 bg-slate-300 rounded-lg">
+                    {showWordList ? <p>hide wordlist</p>:
+                                    <p>show wordlist</p>}
+                </button>
                 <Card 
                     english = {word?.english}
                     romaji = {word?.romaji}
                     index = {index}
                     length = {wordList.length}
                 />
-                <div className="flex mt-5 gap-2">
+                <div className="flex gap-2">
                     <button className=" p-1.5 px-3 bg-slate-300 rounded-lg" onClick={handlePrevButtonClick}>Prev</button>
                     <button onClick={handleNextButtonClick} className=" p-1.5 px-3 bg-slate-300 rounded-lg">Next</button>
                 </div>
-            <button onClick={()=>toggleWordList()} className=" mt-5 p-1.5 px-3 bg-slate-300 rounded-lg">
-                {showWordList ? <p>hide wordlist</p>:
-                                <p>show wordlist</p>}
-            </button>
-            <button onClick={handleRandomizeButtonClick} className=" mt-5 p-1.5 px-3 bg-slate-300 rounded-lg">Randomize Order</button>
+                <div className="flex flex-col gap-2">
+                    <button onClick={handleSpeech} className="p-1.5 px-3 bg-slate-300 rounded-lg">Pronunciation</button>
+                    <button onClick={handleRandomizeButtonClick} className="p-1.5 px-3 bg-slate-300 rounded-lg">Randomize Order</button>
+                </div>
+
             </div>
         </div>
       )

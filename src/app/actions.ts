@@ -50,7 +50,7 @@ export async function searchWord(prevState: FormState, formData: FormData): Prom
 }
 
 // create new word set
-export async function createWordSet(title: string, wordlist: {id: number; english: string; romaji: string }[]) {
+export async function createWordSet(title: string, wordlist: {wordId: number; english: string; romaji: string }[]) {
     const session = await auth();
     if (!session || !session.user?.email) {
       throw new Error("User not authenticated");
@@ -64,7 +64,7 @@ export async function createWordSet(title: string, wordlist: {id: number; englis
     }).returning({ id: wordSet.id});
 
     if (!newWordSet) throw new Error("Failed to create wordSet");
-    const wordIds = wordlist.map(word => word.id);
+    const wordIds = wordlist.map(word => word.wordId);
     const wordSetId = newWordSet.id;
     if (wordIds.length > 0) {
       await db.insert(wordSetWords).values(
@@ -175,4 +175,43 @@ export async function getLoginStatus(): Promise<{user: User | null, sessionType:
   : null;
 
   return({user,sessionType});
+}
+
+export async function getSpeech(wordId: number): Promise<string | null> {
+  // 1️⃣ Check if audio URL is cached
+  const existingWord = await db.select().from(words).where(eq(words.id, wordId));
+
+  if (existingWord.length > 0 && existingWord[0].audio_url) {
+    return existingWord[0].audio_url; // Return cached URL
+  }
+
+  // 2️⃣ If no cached URL, try to fetch from VoiceRSS
+  const text = existingWord[0].word;
+  const url = `https://api.voicerss.org/?key=${process.env.VOICERSS_API_KEY}&hl=ja-jp&v=Airi&src=${encodeURIComponent(
+    text
+  )}&f=48khz_16bit_stereo`;
+
+  try {
+    // Fetch the audio from VoiceRSS
+    const response = await fetch(url);
+
+    // If API returns an error like reaching limit, handle the error
+    if (!response.ok) {
+      const errorData = await response.json();
+      if (errorData.error) {
+        console.error("Error from VoiceRSS:", errorData.error);
+        throw new Error(errorData.error);
+      }
+    }
+
+    // 3️⃣ Store the new URL in the database if the request is successful
+    await db.update(words).set({ audio_url: url }).where(eq(words.id, wordId));
+
+    console.log("Fetched new audio URL and cached it");
+    return url; 
+  } catch (error) {
+    // Handle error (API limit reached or other errors)
+    console.error("Failed to fetch audio:", error);
+    return null; // Return null if the API fails
+  }
 }
