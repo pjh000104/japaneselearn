@@ -60,6 +60,7 @@ export default function WordSearch() {
         const formData = new FormData();
         formData.append("word", sanitizedInput);
         formAction(formData);
+        setInputWord("");
     };
 
     return (
