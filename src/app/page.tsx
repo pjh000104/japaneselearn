@@ -14,6 +14,15 @@ export default function WordSearch() {
     const [inputWord, setInputWord] = useState(""); // State for controlled input
 
     useEffect(() => {
+        if (typeof window !== "undefined") {
+            const storedList = localStorage.getItem("wordList");
+            if (storedList) {
+                setWordList(JSON.parse(storedList));
+            }
+        }
+    }, []);
+
+    useEffect(() => {
         if (!state.romaji) return;
         if (wordList.some(item => item.english === state.english)) {
             return;
