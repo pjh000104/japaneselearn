@@ -33,12 +33,19 @@ export async function searchWord(prevState: FormState, formData: FormData): Prom
   }
 
   else {
-    
+    // checks similar words ex) play -> to play or playing
+    // Escape the word for safety
+    const sanitizedWord = word.replace(/[%_]/g, '\\$&');
+
+    // Build the query using LIKE
     const relatedQuery = sql`
-    SELECT id, word, meaning, furigana, romaji
-    FROM words
-    WHERE meaning REGEXP ${`\\b(to\\s+)?${sanitizedWord}(ing)?\\b`};
+      SELECT id, word, meaning, furigana, romaji
+      FROM words
+      WHERE meaning LIKE ${`%${sanitizedWord}%`}
+        OR meaning LIKE ${`%to ${sanitizedWord}%`}
+        OR meaning LIKE ${`%${sanitizedWord}ing%`};
     `;
+
     info = await db.all(relatedQuery);
   }
 
