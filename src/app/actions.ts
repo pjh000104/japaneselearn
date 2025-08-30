@@ -13,8 +13,10 @@ interface FormState {
   english?: string;
 }
 
-function sanitizeForRegex(input: string): string {
-  return input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // Escape special regex characters
+function sanitizeWord(input: string): string {
+  return input
+    .replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // escape regex specials
+    .replace(/[%_]/g, '\\$&');              // escape SQL LIKE wildcards
 }
 
 // Ensure the function receives `prevState` as the first argument
@@ -25,17 +27,15 @@ export async function searchWord(prevState: FormState, formData: FormData): Prom
     return { error: "Please enter a word!" };
   }
 
-  const sanitizedWord = sanitizeForRegex(word);
+  const sanitizedWord = sanitizeWord(word);
 
-  let info = await db.select().from(words).where(eq(words.meaning, word));
+  let info = await db.select().from(words).where(eq(words.meaning,sanitizedWord ));
   if (info.length>0) {
     console.log("Exact match found:");
   }
 
   else {
     // checks similar words ex) play -> to play or playing
-    // Escape the word for safety
-    const sanitizedWord = word.replace(/[%_]/g, '\\$&');
 
     // Build the query using LIKE
     const relatedQuery = sql`
